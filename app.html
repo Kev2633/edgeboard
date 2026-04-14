@@ -306,13 +306,30 @@ document.getElementById('last-update').textContent='Updated '+new Date().toLocal
 renderDashboard();
 }
 function renderLive(){
-const c=document.getElementById('live-container');c.innerHTML='';
-liveData.forEach(g=>{
-const aR=g.away.records?g.away.records[0]?.summary:'';
-const hR=g.home.records?g.home.records[0]?.summary:'';
-c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status '+(g.status.includes('PM')||g.status.includes('AM')?'':'live')+'">'+g.status+'</span></div><div class="game-teams"><div class="team-row"><img src="'+g.away.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.away.team.abbreviation+'</strong><span class="record">'+aR+'</span><span class="score">'+(g.comp.status.type.state==='pre'?'-':g.away.score)+'</span></div><div class="team-row"><img src="'+g.home.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.home.team.abbreviation+'</strong><span class="record">'+hR+'</span><span class="score">'+(g.comp.status.type.state==='pre'?'-':g.home.score)+'</span></div></div></div>';
-});
-}
+    const c=document.getElementById('live-container');c.innerHTML='';
+    liveData.forEach(g=>{
+    const aR=g.away.records?g.away.records[0]?.summary:'';
+    const hR=g.home.records?g.home.records[0]?.summary:'';
+    const isPre=g.comp.status.type.state==='pre';
+    const awayName=g.away.team.displayName||g.away.team.shortDisplayName||g.away.team.abbreviation;
+    const homeName=g.home.team.displayName||g.home.team.shortDisplayName||g.home.team.abbreviation;
+    let oddsHTML='';
+    const match=linesData.find(l=>{const la=l.away.toLowerCase(),lh=l.home.toLowerCase();return (la.includes(g.away.team.name.toLowerCase())||l.away.includes(g.away.team.shortDisplayName||'XX')) && (lh.includes(g.home.team.name.toLowerCase())||l.home.includes(g.home.team.shortDisplayName||'XX'));});
+    if(match&&match.bookmakers.length){
+    oddsHTML='<table class="odds-table"><thead><tr><th style="text-align:left">Book</th><th>'+g.away.team.abbreviation+' ML</th><th>'+g.home.team.abbreviation+' ML</th><th>Spread</th><th>O/U</th></tr></thead><tbody>';
+    let bestAw=-9999,bestHm=-9999;
+    match.bookmakers.forEach(bk=>{bk.markets.forEach(mk=>{if(mk.key==='h2h'){const aw=mk.outcomes.find(o=>o.name===match.away);const hm=mk.outcomes.find(o=>o.name===match.home);if(aw&&aw.price>bestAw)bestAw=aw.price;if(hm&&hm.price>bestHm)bestHm=hm.price;}});});
+    ['draftkings','fanduel','betmgm','betrivers','espnbet'].forEach(bKey=>{
+    const bk=match.bookmakers.find(b=>b.key===bKey);const name=BOOK_NAMES[bKey]||bKey;
+    if(!bk){oddsHTML+='<tr><td class="book-name">'+name+'</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';return;}
+    let awML='-',hmML='-',spread='-',ou='-';
+    bk.markets.forEach(mk=>{if(mk.key==='h2h'){const aw=mk.outcomes.find(o=>o.name===match.away);const hm=mk.outcomes.find(o=>o.name===match.home);if(aw)awML=(aw.price>0?'+':'')+aw.price;if(hm)hmML=(hm.price>0?'+':'')+hm.price;}if(mk.key==='spreads'){const aw=mk.outcomes.find(o=>o.name===match.away);if(aw)spread=(aw.point>0?'+':'')+aw.point+' ('+(aw.price>0?'+':'')+aw.price+')';}if(mk.key==='totals'){const ov=mk.outcomes.find(o=>o.name==='Over');if(ov)ou='O '+ov.point+' ('+(ov.price>0?'+':'')+ov.price+')';}});
+    const awN=parseFloat(awML)||0,hmN=parseFloat(hmML)||0;
+    oddsHTML+='<tr><td class="book-name">'+name+'</td><td class="'+(awML!='-'?(awN<0?'negative':'positive'):'')+' '+(awN===bestAw&&awML!='-'?'best':'')+'">'+awML+'</td><td class="'+(hmML!='-'?(hmN<0?'negative':'positive'):'')+' '+(hmN===bestHm&&hmML!='-'?'best':'')+'">'+hmML+'</td><td>'+spread+'</td><td>'+ou+'</td></tr>';});
+    oddsHTML+='</tbody></table>';}
+    c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status '+(g.status.includes('PM')||g.status.includes('AM')?'':'live')+'">'+g.status+'</span></div><div class="game-teams"><div class="team-row"><img src="'+g.away.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.away.team.abbreviation+'</strong><span class="record">'+aR+'</span><span class="score">'+(isPre?'-':g.away.score)+'</span></div><div class="team-row"><img src="'+g.home.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.home.team.abbreviation+'</strong><span class="record">'+hR+'</span><span class="score">'+(isPre?'-':g.home.score)+'</span></div></div>'+oddsHTML+'</div>';
+    });
+    }
 // The Odds API - Multi-book lines
 async function fetchLines(){
 const key=getApiKey();
