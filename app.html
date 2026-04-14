@@ -18,15 +18,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .nav-links li:hover{background:var(--card);color:var(--text)}
 .nav-links li.active{background:var(--accent);color:#000;font-weight:600}
 .mobile-nav{display:none;background:var(--bg2);padding:8px;overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--border)}
-.mobile-nav button{background:var(--card);color:var(--dim);border:1px solid var(--border);padding:8px 16px;border-radius:8px;font-size:13px;margin-right:6px;cursor:pointer;white-space:nowrap}
+.mobile-nav button{background:var(--card);color:var(--dim);border:1px solid var(--border);padding:8px 16px;border-radius:8px;font-size:13px;margin-right:6px;cursor:pointer}
 .mobile-nav button.active{background:var(--accent);color:#000;font-weight:600;border-color:var(--accent)}
 .main{flex:1;padding:24px;overflow-y:auto}
-.tab-content{display:none}
-.tab-content.active{display:block}
+.tab-content{display:none}.tab-content.active{display:block}
 .status-bar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
 .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px}
-.status-dot.green{background:var(--green)}
-.status-dot.red{background:var(--red)}
+.status-dot.green{background:var(--green)}.status-dot.red{background:var(--red)}
 h2{font-size:24px;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin-bottom:24px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
@@ -42,16 +40,14 @@ h2{font-size:24px;margin-bottom:16px}
 .sport-badge{background:var(--accent);color:#000;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px}
 .game-status{color:var(--dim);font-size:13px}
 .game-status.live{color:var(--green);font-weight:600}
-.odds-row{display:flex;gap:8px;margin-top:12px}
-.odds-box{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
-.odds-box .label{font-size:11px;color:var(--dim);text-transform:uppercase;margin-bottom:4px}
-.odds-box .value{font-size:16px;font-weight:600}
-.odds-box .value.positive{color:var(--green)}
-.odds-box .value.negative{color:var(--red)}
-.provider-tag{text-align:right;font-size:11px;color:var(--dim);margin-top:6px}
+.odds-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.odds-table th{background:var(--bg);color:var(--dim);padding:8px 6px;text-align:center;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.odds-table td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--border)}
+.odds-table .book-name{text-align:left;font-weight:600;font-size:12px;color:var(--dim)}
+.odds-table .positive{color:var(--green)}.odds-table .negative{color:var(--red)}
+.odds-table .best{background:rgba(0,212,170,.12);font-weight:700}
 .filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
 .filter-bar select,.filter-bar input{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:14px}
-.filter-bar select{cursor:pointer}
 .btn{background:var(--accent);color:#000;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
 .btn:hover{background:var(--ah)}
 .hidden{display:none}
@@ -64,6 +60,9 @@ td{font-size:14px}
 .form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;font-size:14px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;padding:12px 24px;border-radius:8px;font-weight:600;z-index:999;display:none}
+.api-status{padding:8px 16px;border-radius:8px;margin-bottom:16px;font-size:13px}
+.api-status.ok{background:rgba(0,212,170,.1);border:1px solid var(--green);color:var(--green)}
+.api-status.err{background:rgba(255,71,87,.1);border:1px solid var(--red);color:var(--red)}
 @media(max-width:768px){.sidebar{display:none}.mobile-nav{display:flex}.main{padding:12px}}
 </style>
 </head>
@@ -92,7 +91,6 @@ td{font-size:14px}
 <button data-tab="promos">Promos</button>
 <button data-tab="accounts">Accounts</button>
 <button data-tab="transactions">Trans</button>
-<button data-tab="import">Import</button>
 <button data-tab="settings">Settings</button>
 <button data-tab="bets">Bets</button>
 <button data-tab="arb">Arb</button>
@@ -118,15 +116,15 @@ td{font-size:14px}
 <div id="live-container"></div>
 </div>
 <div id="tab-lines" class="tab-content">
-<h2>Line Comparison</h2>
+<h2>Line Comparison - 5 Sportsbooks</h2>
+<div id="lines-api-status"></div>
 <div class="filter-bar">
-<select id="sport-filter"><option value="all">All Sports</option><option value="NHL">NHL</option><option value="MLB">MLB</option><option value="NBA">NBA</option><option value="NFL">NFL</option></select>
-<select id="status-filter"><option value="all">All Games</option><option value="pre">Upcoming</option><option value="in">Live</option><option value="post">Final</option></select>
+<select id="sport-filter"><option value="all">All Sports</option><option value="icehockey_nhl">NHL</option><option value="baseball_mlb">MLB</option><option value="basketball_nba">NBA</option><option value="americanfootball_nfl">NFL</option></select>
 <button class="btn" id="refresh-lines">Refresh Lines</button>
 <input type="text" id="team-search" placeholder="Search team...">
 </div>
-<p id="lines-loading">Loading odds...</p>
-<p id="no-lines-msg" class="hidden">No games with odds found.</p>
+<p id="lines-loading" class="hidden">Loading odds from 5 sportsbooks...</p>
+<p id="no-lines-msg" class="hidden">No odds data. Enter your Odds API key in Settings to get live lines from DraftKings, FanDuel, BetMGM, Caesars & ESPN BET.</p>
 <div id="lines-container"></div>
 </div>
 <div id="tab-promos" class="tab-content">
@@ -147,16 +145,17 @@ td{font-size:14px}
 <h2>Transactions</h2>
 <table><thead><tr><th>Date</th><th>Book</th><th>Type</th><th>Amount</th></tr></thead><tbody id="transactions-body"></tbody></table>
 </div>
-<div id="tab-import" class="tab-content">
-<h2>Import CSV</h2>
-<p style="color:var(--dim);margin-bottom:12px">Import transaction history from your sportsbooks.</p>
-<input type="file" id="csv-file" accept=".csv" style="margin-bottom:12px"><br>
-<button class="btn" onclick="importCSV()">Import</button>
-</div>
 <div id="tab-settings" class="tab-content">
 <h2>Settings</h2>
+<div class="card" style="margin-bottom:16px">
+<h3>The Odds API Key</h3>
+<p style="color:var(--dim);font-size:13px;margin-bottom:12px">Get a FREE key at <a href="https://the-odds-api.com" target="_blank" style="color:var(--accent)">the-odds-api.com</a> (500 requests/month). This powers live lines from DraftKings, FanDuel, BetMGM, Caesars & ESPN BET.</p>
+<div class="form-group"><label>API Key</label><input type="text" id="odds-api-key" placeholder="Paste your Odds API key here..."></div>
+<button class="btn" onclick="saveApiKey()">Save API Key</button>
+<div id="api-key-status" style="margin-top:8px"></div>
+</div>
 <div class="form-group"><label>Default Odds Format</label><select id="odds-format"><option>American</option><option>Decimal</option><option>Fractional</option></select></div>
-<div class="form-group"><label>Auto-Refresh Interval</label><select><option>30 seconds</option><option>1 minute</option><option>5 minutes</option></select></div>
+<div class="form-group"><label>Auto-Refresh Interval</label><select id="refresh-interval"><option value="30">30 seconds</option><option value="60">1 minute</option><option value="300">5 minutes</option></select></div>
 <button class="btn" onclick="showToast('Settings saved!')">Save Settings</button>
 </div>
 <div id="tab-bets" class="tab-content">
@@ -185,10 +184,12 @@ td{font-size:14px}
 <button class="btn" onclick="calcArb()">Calculate</button>
 <div id="arb-result" style="margin-top:16px"></div>
 </div>
-</div>
-</div>
+</div></div>
 <div id="toast" class="toast"></div>
 <script>
+const BOOKS=['draftkings','fanduel','betmgm','caesars_sportsbook','espnbet'];
+const BOOK_NAMES={draftkings:'DraftKings',fanduel:'FanDuel',betmgm:'BetMGM',caesars_sportsbook:'Caesars',espnbet:'ESPN BET'};
+const ODDS_SPORTS=[{key:'icehockey_nhl',name:'NHL'},{key:'baseball_mlb',name:'MLB'},{key:'basketball_nba',name:'NBA'},{key:'americanfootball_nfl',name:'NFL'}];
 const ESPN_SPORTS=[{name:'NHL',path:'hockey/nhl'},{name:'MLB',path:'baseball/mlb'},{name:'NBA',path:'basketball/nba'}];
 let accounts=JSON.parse(localStorage.getItem('eb_accounts')||'[]');
 let transactions=JSON.parse(localStorage.getItem('eb_transactions')||'[]');
@@ -201,57 +202,53 @@ let promos=[
 {book:'ESPN BET',sport:'All',desc:'$500 2nd Chance Bet',exp:'2026-05-15'}
 ];
 let liveData=[],linesData=[];
+function getApiKey(){return localStorage.getItem('eb_odds_api_key')||'';}
+function saveApiKey(){
+const k=document.getElementById('odds-api-key').value.trim();
+localStorage.setItem('eb_odds_api_key',k);
+if(k){document.getElementById('api-key-status').innerHTML='<div class="api-status ok">API key saved. Testing...</div>';testApiKey(k);}else{document.getElementById('api-key-status').innerHTML='<div class="api-status err">No key entered</div>';}
+}
+async function testApiKey(k){
+try{
+const r=await fetch('https://api.the-odds-api.com/v4/sports?apiKey='+k);
+if(r.ok){document.getElementById('api-key-status').innerHTML='<div class="api-status ok">Connected! Remaining: '+r.headers.get('x-requests-remaining')+' requests</div>';fetchLines();}else{document.getElementById('api-key-status').innerHTML='<div class="api-status err">Invalid key ('+r.status+')</div>';}
+}catch(e){document.getElementById('api-key-status').innerHTML='<div class="api-status err">Connection error</div>';}
+}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',2500);}
 function showAddAccount(){document.getElementById('add-account-form').classList.toggle('hidden');}
 function saveAccount(){const b=document.getElementById('acct-book').value;const d=parseFloat(document.getElementById('acct-deposit').value)||0;accounts.push({book:b,deposit:d,status:'Active'});localStorage.setItem('eb_accounts',JSON.stringify(accounts));transactions.push({date:new Date().toLocaleDateString(),book:b,type:'Deposit',amount:d});localStorage.setItem('eb_transactions',JSON.stringify(transactions));renderAll();showToast('Account added!');document.getElementById('add-account-form').classList.add('hidden');}
 function removeAccount(i){transactions.push({date:new Date().toLocaleDateString(),book:accounts[i].book,type:'Withdrawal',amount:-accounts[i].deposit});accounts.splice(i,1);localStorage.setItem('eb_accounts',JSON.stringify(accounts));localStorage.setItem('eb_transactions',JSON.stringify(transactions));renderAll();showToast('Account removed');}
 function saveBet(){const b=document.getElementById('bt-book').value;const a=parseFloat(document.getElementById('bt-amount').value)||0;const o=document.getElementById('bt-odds').value;const p=document.getElementById('bt-pick').value;bets.push({date:new Date().toLocaleDateString(),book:b,amount:a,odds:o,pick:p,result:'Pending'});localStorage.setItem('eb_bets',JSON.stringify(bets));renderAll();showToast('Bet logged!');}
-function importCSV(){const f=document.getElementById('csv-file').files[0];if(!f)return showToast('Select a file first');const r=new FileReader();r.onload=function(e){const lines=e.target.result.split('\n');let count=0;lines.slice(1).forEach(l=>{const p=l.split(',');if(p.length>=4){transactions.push({date:p[0]?.trim(),book:p[1]?.trim(),type:p[2]?.trim(),amount:parseFloat(p[3])||0});count++;}});localStorage.setItem('eb_transactions',JSON.stringify(transactions));renderAll();showToast(count+' transactions imported!');};r.readAsText(f);}
+function importCSV(){const f=document.getElementById('csv-file')?.files[0];if(!f)return showToast('Select a file first');const r=new FileReader();r.onload=function(e){const lines=e.target.result.split('\n');let count=0;lines.slice(1).forEach(l=>{const p=l.split(',');if(p.length>=4){transactions.push({date:p[0]?.trim(),book:p[1]?.trim(),type:p[2]?.trim(),amount:parseFloat(p[3])||0});count++;}});localStorage.setItem('eb_transactions',JSON.stringify(transactions));renderAll();showToast(count+' transactions imported!');};r.readAsText(f);}
 function renderDashboard(){
 const td=accounts.reduce((s,a)=>s+a.deposit,0);
 document.getElementById('total-deposited').textContent='$'+td.toFixed(2);
 document.getElementById('active-accounts').textContent=accounts.length;
-document.getElementById('todays-games').textContent=liveData.length||linesData.length||'-';
+document.getElementById('todays-games').textContent=linesData.length||liveData.length||'-';
 document.getElementById('active-promos').textContent=promos.length;
 const tw=transactions.filter(t=>t.type==='Withdrawal').reduce((s,t)=>s+Math.abs(t.amount),0);
 document.getElementById('total-withdrawn').textContent='$'+tw.toFixed(2);
 document.getElementById('net-bankroll').textContent='$'+(td-tw).toFixed(2);
 const chart=document.getElementById('deposits-chart');
-if(accounts.length>0){let html='';accounts.forEach(a=>{const pct=td>0?(a.deposit/td*100):0;html+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="min-width:100px">'+a.book+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:24px"><div style="width:'+pct+'%;background:var(--accent);height:100%;border-radius:4px"></div></div><span>$'+a.deposit.toFixed(2)+'</span></div>';});chart.innerHTML=html;}else{chart.innerHTML='<p style="color:var(--dim)">Add accounts to see breakdown</p>';}
+if(accounts.length>0){let h='';accounts.forEach(a=>{const p=td>0?(a.deposit/td*100):0;h+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><span style="min-width:100px">'+a.book+'</span><div style="flex:1;background:var(--bg);border-radius:4px;height:24px"><div style="width:'+p+'%;background:var(--accent);height:100%;border-radius:4px"></div></div><span>$'+a.deposit.toFixed(2)+'</span></div>';});chart.innerHTML=h;}else{chart.innerHTML='<p style="color:var(--dim)">Add accounts to see breakdown</p>';}
 }
 function renderPromos(){const c=document.getElementById('promos-container');c.innerHTML='';promos.forEach(p=>{c.innerHTML+='<div class="card"><h3>'+p.book+' - '+p.sport+'</h3><p style="font-size:18px;font-weight:600;margin:8px 0">'+p.desc+'</p><p style="color:var(--dim);font-size:13px">Expires: '+p.exp+'</p></div>';});}
 function renderAccounts(){const b=document.getElementById('accounts-body');b.innerHTML='';accounts.forEach((a,i)=>{b.innerHTML+='<tr><td>'+a.book+'</td><td>$'+a.deposit.toFixed(2)+'</td><td style="color:var(--green)">'+a.status+'</td><td><button onclick="removeAccount('+i+')" style="background:var(--red);color:#fff;border:none;padding:4px 12px;border-radius:4px;cursor:pointer">Remove</button></td></tr>';});}
 function renderTransactions(){const b=document.getElementById('transactions-body');b.innerHTML='';transactions.slice().reverse().forEach(t=>{b.innerHTML+='<tr><td>'+t.date+'</td><td>'+t.book+'</td><td>'+t.type+'</td><td style="color:'+(t.amount>=0?'var(--green)':'var(--red)')+'">$'+Math.abs(t.amount).toFixed(2)+'</td></tr>';});}
 function renderBets(){const b=document.getElementById('bets-body');b.innerHTML='';bets.slice().reverse().forEach(t=>{b.innerHTML+='<tr><td>'+t.date+'</td><td>'+t.book+'</td><td>'+t.pick+'</td><td>'+t.odds+'</td><td>$'+t.amount.toFixed(2)+'</td><td>'+t.result+'</td></tr>';});}
-function calcArb(){const total=parseFloat(document.getElementById('arb-total').value)||100;const o1=document.getElementById('arb-odds1').value;const o2=document.getElementById('arb-odds2').value;function toDecimal(o){const n=parseInt(o);if(n>0)return(n/100)+1;return(100/Math.abs(n))+1;}const d1=toDecimal(o1),d2=toDecimal(o2);const margin=(1/d1)+(1/d2);const s1=total*(1/d1)/((1/d1)+(1/d2));const s2=total-s1;const div=document.getElementById('arb-result');if(margin<1){const profit=total/margin-total;div.innerHTML='<div style="background:rgba(0,212,170,.1);border:1px solid var(--green);border-radius:8px;padding:16px"><div style="color:var(--green);font-weight:700;font-size:18px">ARB FOUND! +$'+profit.toFixed(2)+' profit</div><div style="margin-top:8px">Stake 1: $'+s1.toFixed(2)+' at '+o1+'</div><div>Stake 2: $'+s2.toFixed(2)+' at '+o2+'</div><div style="color:var(--dim);margin-top:8px">Margin: '+(margin*100).toFixed(2)+'%</div></div>';}else{const vig=(margin-1)*100;div.innerHTML='<div style="background:rgba(255,71,87,.1);border:1px solid var(--red);border-radius:8px;padding:16px"><div style="color:var(--red);font-weight:700">No arbitrage opportunity</div><div style="margin-top:8px">Stake 1: $'+s1.toFixed(2)+' at '+o1+'</div><div>Stake 2: $'+s2.toFixed(2)+' at '+o2+'</div><div style="color:var(--dim);margin-top:8px">Vig: '+(vig).toFixed(2)+'%</div></div>';}}
-// Filters
-document.getElementById('sport-filter').addEventListener('change',renderLines);
-document.getElementById('status-filter').addEventListener('change',renderLines);
-document.getElementById('team-search').addEventListener('input',renderLines);
-document.getElementById('refresh-lines').addEventListener('click',fetchLines);
-// Tab navigation - sidebar
-document.querySelectorAll('.nav-links li').forEach(li=>{
-li.addEventListener('click',()=>{
+function calcArb(){const total=parseFloat(document.getElementById('arb-total').value)||100;const o1=document.getElementById('arb-odds1').value;const o2=document.getElementById('arb-odds2').value;function toD(o){const n=parseInt(o);return n>0?(n/100)+1:(100/Math.abs(n))+1;}const d1=toD(o1),d2=toD(o2);const m=(1/d1)+(1/d2);const s1=total*(1/d1)/((1/d1)+(1/d2));const s2=total-s1;const div=document.getElementById('arb-result');if(m<1){const pr=total/m-total;div.innerHTML='<div style="background:rgba(0,212,170,.1);border:1px solid var(--green);border-radius:8px;padding:16px"><div style="color:var(--green);font-weight:700;font-size:18px">ARB FOUND! +$'+pr.toFixed(2)+'</div><div style="margin-top:8px">Stake 1: $'+s1.toFixed(2)+' at '+o1+'</div><div>Stake 2: $'+s2.toFixed(2)+' at '+o2+'</div></div>';}else{div.innerHTML='<div style="background:rgba(255,71,87,.1);border:1px solid var(--red);border-radius:8px;padding:16px"><div style="color:var(--red);font-weight:700">No arb. Vig: '+((m-1)*100).toFixed(2)+'%</div><div style="margin-top:8px">Stake 1: $'+s1.toFixed(2)+' at '+o1+'</div><div>Stake 2: $'+s2.toFixed(2)+' at '+o2+'</div></div>';}}
+// Tab nav
+function switchTab(tab){
 document.querySelectorAll('.nav-links li').forEach(l=>l.classList.remove('active'));
 document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
 document.querySelectorAll('.mobile-nav button').forEach(b=>b.classList.remove('active'));
-li.classList.add('active');
-document.getElementById('tab-'+li.dataset.tab).classList.add('active');
-const mb=document.querySelector('.mobile-nav button[data-tab="'+li.dataset.tab+'"]');
-if(mb)mb.classList.add('active');
-});});
-// Tab navigation - mobile
-document.querySelectorAll('.mobile-nav button').forEach(btn=>{
-btn.addEventListener('click',()=>{
-document.querySelectorAll('.mobile-nav button').forEach(b=>b.classList.remove('active'));
-document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-document.querySelectorAll('.nav-links li').forEach(l=>l.classList.remove('active'));
-btn.classList.add('active');
-document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
-const sl=document.querySelector('.nav-links li[data-tab="'+btn.dataset.tab+'"]');
-if(sl)sl.classList.add('active');
-});});
-// Live Games
+document.getElementById('tab-'+tab).classList.add('active');
+const sl=document.querySelector('.nav-links li[data-tab="'+tab+'"]');if(sl)sl.classList.add('active');
+const mb=document.querySelector('.mobile-nav button[data-tab="'+tab+'"]');if(mb)mb.classList.add('active');
+}
+document.querySelectorAll('.nav-links li').forEach(li=>{li.addEventListener('click',()=>switchTab(li.dataset.tab));});
+document.querySelectorAll('.mobile-nav button').forEach(btn=>{btn.addEventListener('click',()=>switchTab(btn.dataset.tab));});
+// ESPN Live Games
 async function fetchESPN(){
 document.getElementById('live-loading').classList.remove('hidden');
 document.getElementById('no-live').classList.add('hidden');
@@ -260,21 +257,18 @@ liveData=[];
 for(const s of ESPN_SPORTS){
 try{
 const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+s.path+'/scoreboard');
-if(!r.ok)continue;
-const d=await r.json();
+if(!r.ok)continue;const d=await r.json();
 (d.events||[]).forEach(ev=>{
-const comp=ev.competitions&&ev.competitions[0];
-if(!comp)return;
-const away=comp.competitors.find(c=>c.homeAway==='away');
-const home=comp.competitors.find(c=>c.homeAway==='home');
-const st=comp.status||{};
-const tp=st.type||{};
+const c=ev.competitions&&ev.competitions[0];if(!c)return;
+const away=c.competitors.find(x=>x.homeAway==='away');
+const home=c.competitors.find(x=>x.homeAway==='home');
+const tp=c.status?.type||{};
 if(tp.state!=='in')return;
-liveData.push({sport:s.name,away:away,home:home,status:tp.shortDetail||tp.detail||'Live',comp:comp});
+liveData.push({sport:s.name,away,home,status:tp.shortDetail||'Live',comp:c});
 });
 }catch(e){console.log(e);}}
 document.getElementById('live-loading').classList.add('hidden');
-if(liveData.length===0){document.getElementById('no-live').classList.remove('hidden');}
+if(!liveData.length)document.getElementById('no-live').classList.remove('hidden');
 renderLive();
 document.getElementById('last-update').textContent='Updated '+new Date().toLocaleTimeString();
 renderDashboard();
@@ -282,97 +276,115 @@ renderDashboard();
 function renderLive(){
 const c=document.getElementById('live-container');c.innerHTML='';
 liveData.forEach(g=>{
-const awayRec=g.away.records?g.away.records[0]?.summary:'';
-const homeRec=g.home.records?g.home.records[0]?.summary:'';
-c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status live">'+g.status+'</span></div><div class="game-teams"><div class="team-row"><img src="'+g.away.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.away.team.abbreviation+'</strong><span class="record">'+awayRec+'</span><span class="score">'+g.away.score+'</span></div><div class="team-row"><img src="'+g.home.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.home.team.abbreviation+'</strong><span class="record">'+homeRec+'</span><span class="score">'+g.home.score+'</span></div></div></div>';
+const aR=g.away.records?g.away.records[0]?.summary:'';
+const hR=g.home.records?g.home.records[0]?.summary:'';
+c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status live">'+g.status+'</span></div><div class="game-teams"><div class="team-row"><img src="'+g.away.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.away.team.abbreviation+'</strong><span class="record">'+aR+'</span><span class="score">'+g.away.score+'</span></div><div class="team-row"><img src="'+g.home.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.home.team.abbreviation+'</strong><span class="record">'+hR+'</span><span class="score">'+g.home.score+'</span></div></div></div>';
 });
 }
-// Line Comparison
+// The Odds API - Multi-book lines
 async function fetchLines(){
+const key=getApiKey();
+const st=document.getElementById('lines-api-status');
+if(!key){
+st.innerHTML='<div class="api-status err">No API key. Go to Settings to add your free Odds API key for live lines from 5 sportsbooks.</div>';
+document.getElementById('no-lines-msg').classList.remove('hidden');
+return;
+}
+st.innerHTML='';
 document.getElementById('lines-loading').classList.remove('hidden');
 document.getElementById('no-lines-msg').classList.add('hidden');
 document.getElementById('lines-container').innerHTML='';
 linesData=[];
-for(const s of ESPN_SPORTS){
+const sf=document.getElementById('sport-filter').value;
+const sports=sf==='all'?ODDS_SPORTS:ODDS_SPORTS.filter(s=>s.key===sf);
+for(const s of sports){
 try{
-const r=await fetch('https://site.api.espn.com/apis/site/v2/sports/'+s.path+'/scoreboard');
+const url='https://api.the-odds-api.com/v4/sports/'+s.key+'/odds?apiKey='+key+'&regions=us&markets=h2h,spreads,totals&oddsFormat=american&bookmakers='+BOOKS.join(',');
+const r=await fetch(url);
 if(!r.ok)continue;
-const d=await r.json();
-(d.events||[]).forEach(ev=>{
-const comp=ev.competitions&&ev.competitions[0];
-if(!comp)return;
-const away=comp.competitors.find(c=>c.homeAway==='away');
-const home=comp.competitors.find(c=>c.homeAway==='home');
-const st=comp.status||{};
-const tp=st.type||{};
-const odds=comp.odds||[];
-const po=odds[0]||null;
-let awayML='',homeML='',spread='',overUnder='',provider='';
-if(po){
-overUnder=po.overUnder||'';
-spread=po.spread||'';
-provider=po.provider?po.provider.name:'';
-if(po.moneyline){
-if(po.moneyline.home&&po.moneyline.home.close)homeML=po.moneyline.home.close.odds||'';
-if(po.moneyline.away&&po.moneyline.away.close)awayML=po.moneyline.away.close.odds||'';
-}
-if(po.homeTeamOdds&&po.homeTeamOdds.moneyLine&&!homeML)homeML=po.homeTeamOdds.moneyLine;
-if(po.awayTeamOdds&&po.awayTeamOdds.moneyLine&&!awayML)awayML=po.awayTeamOdds.moneyLine;
-}
-linesData.push({sport:s.name,away:away,home:home,state:tp.state||'pre',statusText:tp.shortDetail||tp.detail||'',awayML:awayML,homeML:homeML,spread:po?po.details||'':'',overUnder:overUnder,provider:provider,awayScore:away?away.score:'',homeScore:home?home.score:''});
+const data=await r.json();
+const rem=r.headers.get('x-requests-remaining');
+if(rem)st.innerHTML='<div class="api-status ok">Connected - '+rem+' API requests remaining this month</div>';
+data.forEach(ev=>{
+linesData.push({sport:s.name,sportKey:s.key,id:ev.id,home:ev.home_team,away:ev.away_team,start:ev.commence_time,bookmakers:ev.bookmakers||[]});
 });
 }catch(e){console.log(e);}}
 document.getElementById('lines-loading').classList.add('hidden');
-if(linesData.length===0)document.getElementById('no-lines-msg').classList.remove('hidden');
+if(!linesData.length)document.getElementById('no-lines-msg').classList.remove('hidden');
 renderLines();
-document.getElementById('last-update').textContent='Updated '+new Date().toLocaleTimeString();
 renderDashboard();
 }
 function renderLines(){
 const c=document.getElementById('lines-container');c.innerHTML='';
-const sf=document.getElementById('sport-filter').value;
-const stf=document.getElementById('status-filter').value;
 const search=document.getElementById('team-search').value.toLowerCase();
-let filtered=linesData.filter(g=>{
-if(sf!=='all'&&g.sport!==sf)return false;
-if(stf!=='all'&&g.state!==stf)return false;
-if(search){
-const aN=g.away?.team?.displayName?.toLowerCase()||'';
-const hN=g.home?.team?.displayName?.toLowerCase()||'';
-const aA=g.away?.team?.abbreviation?.toLowerCase()||'';
-const hA=g.home?.team?.abbreviation?.toLowerCase()||'';
-if(!aN.includes(search)&&!hN.includes(search)&&!aA.includes(search)&&!hA.includes(search))return false;
-}
-return true;
-});
-if(filtered.length===0){c.innerHTML='<p style="color:var(--dim)">No games match filters.</p>';return;}
+let filtered=linesData;
+if(search)filtered=linesData.filter(g=>g.home.toLowerCase().includes(search)||g.away.toLowerCase().includes(search));
+if(!filtered.length){c.innerHTML='<p style="color:var(--dim)">No games match filters.</p>';return;}
 filtered.forEach(g=>{
-const awayRec=g.away?.records?g.away.records[0]?.summary:'';
-const homeRec=g.home?.records?g.home.records[0]?.summary:'';
-const isLive=g.state==='in';
-const statusClass=isLive?'game-status live':'game-status';
-const statusTime=g.statusText||'Scheduled';
-const awayAbbr=g.away?.team?.abbreviation||'?';
-const homeAbbr=g.home?.team?.abbreviation||'?';
-const awayLogo=g.away?.team?.logo||'';
-const homeLogo=g.home?.team?.logo||'';
-const spreadDisplay=g.spread||'-';
-const ouDisplay=g.overUnder||'-';
-const awayMLd=g.awayML||'-';
-const homeMLd=g.homeML||'-';
-const awayMLc=String(awayMLd).startsWith('-')?'negative':(String(awayMLd).startsWith('+')?'positive':'');
-const homeMLc=String(homeMLd).startsWith('-')?'negative':(String(homeMLd).startsWith('+')?'positive':'');
-let sH='';if(isLive){sH='<span class="score">'+g.awayScore+'</span>';}
-let sH2='';if(isLive){sH2='<span class="score">'+g.homeScore+'</span>';}
-c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="'+statusClass+'">'+statusTime+'</span></div><div class="game-teams"><div class="team-row"><img src="'+awayLogo+'" onerror="this.style.display=\'none\'"><strong>'+awayAbbr+'</strong><span class="record">'+awayRec+'</span>'+sH+'</div><div class="team-row"><img src="'+homeLogo+'" onerror="this.style.display=\'none\'"><strong>'+homeAbbr+'</strong><span class="record">'+homeRec+'</span>'+sH2+'</div></div><div class="odds-row"><div class="odds-box"><div class="label">Spread</div><div class="value">'+spreadDisplay+'</div></div><div class="odds-box"><div class="label">Moneyline</div><div class="value '+awayMLc+'">'+awayMLd+'</div><div class="value '+homeMLc+'">'+homeMLd+'</div></div><div class="odds-box"><div class="label">O/U</div><div class="value">'+ouDisplay+'</div></div></div>'+(g.provider?'<div class="provider-tag">via '+g.provider+'</div>':'')+'</div>';
+const dt=new Date(g.start);
+const timeStr=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+let html='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status">'+timeStr+'</span></div>';
+html+='<div class="game-teams" style="margin-bottom:12px"><div class="team-row"><strong>'+g.away+'</strong></div><div class="team-row"><strong>'+g.home+'</strong></div></div>';
+// Build odds table
+html+='<table class="odds-table"><thead><tr><th style="text-align:left">Book</th><th>'+g.away.split(' ').pop()+' ML</th><th>'+g.home.split(' ').pop()+' ML</th><th>Spread</th><th>O/U</th></tr></thead><tbody>';
+let bestAwayML=-9999,bestHomeML=-9999,bestSpreadVal=-9999,bestOU=9999;
+// Collect best values first
+g.bookmakers.forEach(bk=>{
+bk.markets.forEach(mk=>{
+if(mk.key==='h2h'){
+const aw=mk.outcomes.find(o=>o.name===g.away);
+const hm=mk.outcomes.find(o=>o.name===g.home);
+if(aw&&aw.price>bestAwayML)bestAwayML=aw.price;
+if(hm&&hm.price>bestHomeML)bestHomeML=hm.price;
+}
+});
+});
+// Render each book
+const bookOrder=['draftkings','fanduel','betmgm','caesars_sportsbook','espnbet'];
+bookOrder.forEach(bKey=>{
+const bk=g.bookmakers.find(b=>b.key===bKey);
+const name=BOOK_NAMES[bKey]||bKey;
+if(!bk){html+='<tr><td class="book-name">'+name+'</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';return;}
+let awML='-',hmML='-',spread='-',ou='-';
+bk.markets.forEach(mk=>{
+if(mk.key==='h2h'){
+const aw=mk.outcomes.find(o=>o.name===g.away);
+const hm=mk.outcomes.find(o=>o.name===g.home);
+if(aw)awML=(aw.price>0?'+':'')+aw.price;
+if(hm)hmML=(hm.price>0?'+':'')+hm.price;
+}
+if(mk.key==='spreads'){
+const aw=mk.outcomes.find(o=>o.name===g.away);
+if(aw)spread=(aw.point>0?'+':'')+aw.point+' ('+(aw.price>0?'+':'')+aw.price+')';
+}
+if(mk.key==='totals'){
+const ov=mk.outcomes.find(o=>o.name==='Over');
+if(ov)ou='O '+ov.point+' ('+(ov.price>0?'+':'')+ov.price+')';
+}
+});
+const awNum=parseFloat(awML)||0;
+const hmNum=parseFloat(hmML)||0;
+const awCls=(awML!=='-'?(awNum<0?'negative':'positive'):'')+' '+(awNum===bestAwayML&&awML!=='-'?'best':'');
+const hmCls=(hmML!=='-'?(hmNum<0?'negative':'positive'):'')+' '+(hmNum===bestHomeML&&hmML!=='-'?'best':'');
+html+='<tr><td class="book-name">'+name+'</td><td class="'+awCls+'">'+awML+'</td><td class="'+hmCls+'">'+hmML+'</td><td>'+spread+'</td><td>'+ou+'</td></tr>';
+});
+html+='</tbody></table></div>';
+c.innerHTML+=html;
 });
 }
+// Filters
+document.getElementById('sport-filter').addEventListener('change',()=>{fetchLines();});
+document.getElementById('team-search').addEventListener('input',renderLines);
+document.getElementById('refresh-lines').addEventListener('click',fetchLines);
+// Init
 function renderAll(){renderDashboard();renderPromos();renderAccounts();renderTransactions();renderBets();}
+const savedKey=getApiKey();
+if(savedKey)document.getElementById('odds-api-key').value=savedKey;
 renderAll();
 fetchESPN();
 fetchLines();
 setInterval(fetchESPN,30000);
-setInterval(fetchLines,60000);
+setInterval(fetchLines,120000);
 </script>
 </body>
 </html>
