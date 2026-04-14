@@ -195,11 +195,11 @@ let accounts=JSON.parse(localStorage.getItem('eb_accounts')||'[]');
 let transactions=JSON.parse(localStorage.getItem('eb_transactions')||'[]');
 let bets=JSON.parse(localStorage.getItem('eb_bets')||'[]');
 let promos=[
-{book:'DraftKings',sport:'NHL',desc:'Bet $5 Get $200 in Bonus Bets',exp:'2026-04-30'},
-{book:'FanDuel',sport:'MLB',desc:'No Sweat First Bet up to $1000',exp:'2026-04-30'},
-{book:'BetMGM',sport:'NBA',desc:'First Bet up to $1500',exp:'2026-05-01'},
-{book:'BetRivers',sport:'NHL',desc:'$1000 First Bet on BetRivers',exp:'2026-04-30'},
-{book:'ESPN BET',sport:'All',desc:'$500 2nd Chance Bet',exp:'2026-05-15'}
+{book:'DraftKings',sport:'NHL',desc:'20% Profit Boost: Any Sport, Any Market Today',exp:'2026-04-30'},
+{book:'FanDuel',sport:'MLB',desc:'MLB Profit Boost: 25% on Same-Game Parlays',exp:'2026-04-30'},
+{book:'BetMGM',sport:'NBA',desc:'Refer-a-Friend: Both Get $100 Bonus Bets',exp:'2026-05-01'},
+{book:'BetRivers',sport:'NHL',desc:'Daily Odds Boosts + House Specials on Local Teams',exp:'2026-04-30'},
+{book:'ESPN BET',sport:'All',desc:'Mint Club: Weekly Profit Boosts & Deposit Bonuses',exp:'2026-05-15'}
 ];
 let liveData=[],linesData=[];
 function getApiKey(){return localStorage.getItem('eb_odds_api_key')||'';}
