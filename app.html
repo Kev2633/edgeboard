@@ -360,7 +360,7 @@ linesData.push({sport:s.name,sportKey:s.key,id:ev.id,home:ev.home_team,away:ev.a
 }catch(e){console.log(e);}}
 document.getElementById('lines-loading').classList.add('hidden');
 if(!linesData.length)document.getElementById('no-lines-msg').classList.remove('hidden');
-renderLines();
+renderLines();renderLive();
 renderDashboard();
 }
 function renderLines(){
