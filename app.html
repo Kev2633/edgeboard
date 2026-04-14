@@ -129,7 +129,11 @@ td{font-size:14px}
 </div>
 <div id="tab-promos" class="tab-content">
 <h2>Promotions</h2>
-<div id="promos-container" class="grid"></div>
+    <div class="filter-bar">
+    <select id="promo-book-filter" onchange="renderPromos()"><option value="all">All Sportsbooks</option><option value="DraftKings">DraftKings</option><option value="FanDuel">FanDuel</option><option value="BetMGM">BetMGM</option><option value="ESPN BET">ESPN BET</option><option value="BetRivers">BetRivers</option></select>
+    <select id="promo-sport-filter" onchange="renderPromos()"><option value="all">All Sports</option><option value="NBA">NBA</option><option value="MLB">MLB</option><option value="NHL">NHL</option><option value="NFL">NFL</option><option value="Soccer">Soccer</option><option value="NASCAR">NASCAR</option><option value="All">General</option></select>
+    </div>
+    <div id="promos-container" class="grid"></div>
 </div>
 <div id="tab-accounts" class="tab-content">
 <h2>Sportsbook Accounts</h2>
