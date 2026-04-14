@@ -195,13 +195,41 @@ let accounts=JSON.parse(localStorage.getItem('eb_accounts')||'[]');
 let transactions=JSON.parse(localStorage.getItem('eb_transactions')||'[]');
 let bets=JSON.parse(localStorage.getItem('eb_bets')||'[]');
 let promos=[
-{book:'DraftKings',sport:'NHL',desc:'20% Profit Boost: Any Sport, Any Market Today',exp:'2026-04-30'},
-{book:'FanDuel',sport:'MLB',desc:'MLB Profit Boost: 25% on Same-Game Parlays',exp:'2026-04-30'},
-{book:'BetMGM',sport:'NBA',desc:'Refer-a-Friend: Both Get $100 Bonus Bets',exp:'2026-05-01'},
-{book:'BetRivers',sport:'NHL',desc:'Daily Odds Boosts + House Specials on Local Teams',exp:'2026-04-30'},
-{book:'ESPN BET',sport:'All',desc:'Mint Club: Weekly Profit Boosts & Deposit Bonuses',exp:'2026-05-15'}
+let promos=[
+{book:'DraftKings',sport:'NBA',desc:'NBA Play-In Games 30% SGP(x) Boost on 4+ leg parlays',exp:'2026-04-30'},
+{book:'DraftKings',sport:'NBA',desc:'NBA Quick Hits 25% Profit Boost',exp:'2026-04-30'},
+{book:'DraftKings',sport:'MLB',desc:'MLB Quick Hits 30% Profit Boost',exp:'2026-04-30'},
+{book:'DraftKings',sport:'All',desc:'Any Sport 20% Profit Boost on any bet today',exp:'2026-04-30'},
+{book:'DraftKings',sport:'Soccer',desc:'Champions League Profit Boost Pack - boost for each UCL match',exp:'2026-04-30'},
+{book:'DraftKings',sport:'NBA',desc:'NBA Series Specials 25% Profit Boost on Series Props',exp:'2026-05-15'},
+{book:'DraftKings',sport:'MLB',desc:'MLB Early Exit - insurance on pitchers and batters',exp:'2026-06-30'},
+{book:'DraftKings',sport:'All',desc:'Refer a Friend - both get bonus bets',exp:'2026-12-31'},
+{book:'FanDuel',sport:'NBA',desc:'NBA Play-In-Palooza: 50% profit boost on live NBA Play-In wager + $2M bonus bet pool',exp:'2026-04-30'},
+{book:'FanDuel',sport:'NBA',desc:'NBA Happy Hour: 30% profit boost on Player Points NBA wager (5-19pm ET)',exp:'2026-04-30'},
+{book:'FanDuel',sport:'NBA',desc:'NBA SGP 25% Profit Boost on 3+ leg same-game parlay',exp:'2026-04-30'},
+{book:'FanDuel',sport:'All',desc:'All-Sport Parlay 30% Profit Boost on any parlay or SGP+',exp:'2026-04-30'},
+{book:'FanDuel',sport:'NHL',desc:'NHL SGP 25% Profit Boost on 3+ leg same-game parlay',exp:'2026-04-30'},
+{book:'FanDuel',sport:'Soccer',desc:'Soccer SGP 30% Profit Boost on 3+ leg same-game parlay',exp:'2026-04-30'},
+{book:'FanDuel',sport:'MLB',desc:'Referral MLB Jersey Sweepstakes - refer a friend for giveaway entry',exp:'2026-05-31'},
+{book:'FanDuel',sport:'All',desc:'FanDuel Discord community - exclusive rewards & insights',exp:'2026-12-31'},
+{book:'BetMGM',sport:'All',desc:'Any Sport Parlay Boost on any sport',exp:'2026-04-30'},
+{book:'BetMGM',sport:'NBA',desc:'Fast Break Daily Bonus - daily shot at $50 bonus bet, spins, or boost',exp:'2026-04-30'},
+{book:'BetMGM',sport:'NHL',desc:'NHL Hat Trick Jackpot - bet $10+ on Anytime Goalscorer, share $10K if 3+ goals',exp:'2026-04-30'},
+{book:'BetMGM',sport:'All',desc:'Lions Boost - daily enhanced odds boosts on select markets',exp:'2026-04-30'},
+{book:'BetMGM',sport:'All',desc:'Multi-Sport Parlay Boost - up to 33% increased payout on multi-sport parlays',exp:'2026-04-30'},
+{book:'BetMGM',sport:'All',desc:'Parlay Plus - up to 40% more profit on 4-7 leg parlays any sport',exp:'2026-04-30'},
+{book:'BetMGM',sport:'All',desc:'Refer-a-Friend: Both get $100 bonus when friend signs up',exp:'2026-12-31'},
+{book:'ESPN BET',sport:'All',desc:'Special Market - curated wagers from ESPN personalities (SVP, Greenberg, Elle Duncan)',exp:'2026-04-30'},
+{book:'ESPN BET',sport:'All',desc:'Daily Odds Boosts across MLB, NBA, NHL and more',exp:'2026-04-30'},
+{book:'ESPN BET',sport:'All',desc:'PENN Play Program - loyalty rewards: odds boosts, free trips, hotel stays',exp:'2026-12-31'},
+{book:'ESPN BET',sport:'All',desc:'Refer a Friend - both get $50 in sportsbook bonuses',exp:'2026-12-31'},
+{book:'BetRivers',sport:'All',desc:'House Specials - daily boosts & special markets for local teams',exp:'2026-04-30'},
+{book:'BetRivers',sport:'All',desc:'Daily Odds Boosts - sport-specific profit boosts (NFL, NBA, NHL, MLB & more)',exp:'2026-04-30'},
+{book:'BetRivers',sport:'NASCAR',desc:'NASCAR Top 5 Insurance - bonus bets back if Top 5 finisher bet loses',exp:'2026-04-30'},
+{book:'BetRivers',sport:'All',desc:'PropPacks - curated prop bet bundles with boosted odds',exp:'2026-04-30'},
+{book:'BetRivers',sport:'All',desc:'Rush Rewards & Bonus Store - earn points, redeem for bonus bets & boosts',exp:'2026-12-31'},
+{book:'BetRivers',sport:'All',desc:'Happy Hour Multipliers - earn extra loyalty points during happy hours',exp:'2026-04-30'}
 ];
-let liveData=[],linesData=[];
 function getApiKey(){return localStorage.getItem('eb_odds_api_key')||'';}
 function saveApiKey(){
 const k=document.getElementById('odds-api-key').value.trim();
