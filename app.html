@@ -310,7 +310,7 @@ const c=document.getElementById('live-container');c.innerHTML='';
 liveData.forEach(g=>{
 const aR=g.away.records?g.away.records[0]?.summary:'';
 const hR=g.home.records?g.home.records[0]?.summary:'';
-c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status live">'+g.status+'</span></div><div class="game-teams"><div class="team-row"><img src="'+g.away.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.away.team.abbreviation+'</strong><span class="record">'+aR+'</span><span class="score">'+g.away.score+'</span></div><div class="team-row"><img src="'+g.home.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.home.team.abbreviation+'</strong><span class="record">'+hR+'</span><span class="score">'+g.home.score+'</span></div></div></div>';
+c.innerHTML+='<div class="game-card"><div class="game-header"><span class="sport-badge">'+g.sport+'</span><span class="game-status '+(g.status.includes('PM')||g.status.includes('AM')?'':'live')+'">'+g.status+'</span></div><div class="game-teams"><div class="team-row"><img src="'+g.away.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.away.team.abbreviation+'</strong><span class="record">'+aR+'</span><span class="score">'+g.away.score+'</span></div><div class="team-row"><img src="'+g.home.team.logo+'" onerror="this.style.display=\'none\'"><strong>'+g.home.team.abbreviation+'</strong><span class="record">'+hR+'</span><span class="score">'+(g.home.score==='0'?'-':g.home.score)+'</span></div></div></div>';
 });
 }
 // The Odds API - Multi-book lines
