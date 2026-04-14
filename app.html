@@ -119,7 +119,7 @@ td{font-size:14px}
 <h2>Line Comparison - 5 Sportsbooks</h2>
 <div id="lines-api-status"></div>
 <div class="filter-bar">
-<select id="sport-filter"><option value="all">All Sports</option><option value="icehockey_nhl">NHL</option><option value="baseball_mlb">MLB</option><option value="basketball_nba">NBA</option><option value="americanfootball_nfl">NFL</option></select>
+<select id="sport-filter"><option value="all">All Sports</option><option value="icehockey_nhl">NHL</option><option value="baseball_mlb">MLB</option><option value="basketball_nba">NBA</option><option value="americanfootball_nfl">NFL</option><option value="mma_mixed_martial_arts">UFC</option></select>
 <button class="btn" id="refresh-lines">Refresh Lines</button>
 <input type="text" id="team-search" placeholder="Search team...">
 </div>
@@ -189,7 +189,7 @@ td{font-size:14px}
 <script>
 const BOOKS=['draftkings','fanduel','betmgm','caesars_sportsbook','espnbet'];
 const BOOK_NAMES={draftkings:'DraftKings',fanduel:'FanDuel',betmgm:'BetMGM',caesars_sportsbook:'Caesars',espnbet:'ESPN BET'};
-const ODDS_SPORTS=[{key:'icehockey_nhl',name:'NHL'},{key:'baseball_mlb',name:'MLB'},{key:'basketball_nba',name:'NBA'},{key:'americanfootball_nfl',name:'NFL'}];
+const ODDS_SPORTS=[{key:'icehockey_nhl',name:'NHL'},{key:'baseball_mlb',name:'MLB'},{key:'basketball_nba',name:'NBA'},{key:'americanfootball_nfl',name:'NFL'},{key:'mma_mixed_martial_arts',name:'UFC'}];
 const ESPN_SPORTS=[{name:'NHL',path:'hockey/nhl'},{name:'MLB',path:'baseball/mlb'},{name:'NBA',path:'basketball/nba'}];
 let accounts=JSON.parse(localStorage.getItem('eb_accounts')||'[]');
 let transactions=JSON.parse(localStorage.getItem('eb_transactions')||'[]');
