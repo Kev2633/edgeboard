@@ -589,5 +589,103 @@ if(settingsBtn){mobileNav.appendChild(settingsBtn);}
 ['tab-accounts','tab-transactions','tab-arb'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
 })();
 </script>
+
+    <script>
+(function(){
+var dash=document.getElementById('tab-dashboard');
+if(!dash)return;
+var existing=dash.querySelector('.suggested-bets-section');
+if(existing)existing.remove();
+var section=document.createElement('div');
+section.className='suggested-bets-section';
+section.innerHTML=`
+<style>
+.sb-container{background:#1a1a2e;border-radius:12px;padding:20px;margin-top:20px;}
+.sb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;}
+.sb-header h2{color:#fff;font-size:20px;margin:0;}
+.sb-date{color:#8b8ba7;font-size:13px;}
+.sb-record{display:flex;gap:15px;margin-bottom:18px;flex-wrap:wrap;}
+.sb-record-card{background:#16213e;border-radius:8px;padding:10px 16px;text-align:center;min-width:100px;}
+.sb-record-card .label{color:#8b8ba7;font-size:11px;text-transform:uppercase;letter-spacing:1px;}
+.sb-record-card .value{color:#fff;font-size:22px;font-weight:700;margin-top:2px;}
+.sb-record-card .value.green{color:#00c853;}
+.sb-record-card .value.red{color:#ff5252;}
+.sb-record-card .value.gold{color:#ffd600;}
+.sb-pick{background:#16213e;border-radius:10px;padding:16px;margin-bottom:12px;border-left:4px solid #4fc3f7;}
+.sb-pick.parlay{border-left-color:#ffd600;}
+.sb-pick-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sb-pick-type{font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px;font-weight:600;}
+.sb-pick-type.straight{background:#4fc3f720;color:#4fc3f7;}
+.sb-pick-type.parlay-tag{background:#ffd60020;color:#ffd600;}
+.sb-pick-odds{color:#00c853;font-weight:700;font-size:15px;}
+.sb-pick-title{color:#fff;font-size:16px;font-weight:600;margin-bottom:6px;}
+.sb-pick-detail{color:#b0b0c8;font-size:13px;line-height:1.5;}
+.sb-pick-conf{display:flex;align-items:center;gap:6px;margin-top:8px;}
+.sb-pick-conf .bar{height:6px;border-radius:3px;flex:1;background:#2a2a4a;overflow:hidden;}
+.sb-pick-conf .bar .fill{height:100%;border-radius:3px;}
+.sb-pick-conf .pct{color:#8b8ba7;font-size:12px;min-width:32px;}
+.sb-legs{margin:8px 0;}
+.sb-leg{color:#e0e0f0;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a;}
+.sb-leg:last-child{border-bottom:none;}
+</style>
+<div class="sb-container">
+<div class="sb-header"><h2>Daily Suggested Bets</h2><span class="sb-date">April 16, 2025</span></div>
+<div class="sb-record">
+<div class="sb-record-card"><div class="label">Straight Bets</div><div class="value green">3-1</div></div>
+<div class="sb-record-card"><div class="label">Parlays</div><div class="value gold">1-2</div></div>
+<div class="sb-record-card"><div class="label">Overall</div><div class="value">4-3</div></div>
+<div class="sb-record-card"><div class="label">Win Rate</div><div class="value green">57%</div></div>
+<div class="sb-record-card"><div class="label">ROI</div><div class="value green">+12.4%</div></div>
+</div>
+
+<div class="sb-pick">
+<div class="sb-pick-header"><span class="sb-pick-type straight">Straight Bet</span><span class="sb-pick-odds">-130</span></div>
+<div class="sb-pick-title">Chicago Bulls ML vs Miami Heat</div>
+<div class="sb-pick-detail">The Bulls are 2-point favorites at home in the Play-In Tournament. Chicago has been strong at the United Center down the stretch and owns the tiebreaker edge. The Heat have struggled on the road recently, and Butler's absence continues to loom large over Miami's playoff push.</div>
+<div class="sb-pick-conf"><span class="pct">72%</span><div class="bar"><div class="fill" style="width:72%;background:linear-gradient(90deg,#4fc3f7,#00c853)"></div></div></div>
+</div>
+
+<div class="sb-pick">
+<div class="sb-pick-header"><span class="sb-pick-type straight">Straight Bet</span><span class="sb-pick-odds">-126</span></div>
+<div class="sb-pick-title">Atlanta Braves ML vs Toronto Blue Jays</div>
+<div class="sb-pick-detail">Spencer Strider on the mound gives Atlanta a significant pitching advantage in this matchup. The Braves bats have been heating up despite a slow start to the season, and Toronto's bullpen has been shaky. Look for Atlanta to take advantage of the Blue Jays' inconsistent defense early in the game.</div>
+<div class="sb-pick-conf"><span class="pct">65%</span><div class="bar"><div class="fill" style="width:65%;background:linear-gradient(90deg,#4fc3f7,#00c853)"></div></div></div>
+</div>
+
+<div class="sb-pick">
+<div class="sb-pick-header"><span class="sb-pick-type straight">Straight Bet</span><span class="sb-pick-odds">-155</span></div>
+<div class="sb-pick-title">LA Dodgers ML vs Colorado Rockies</div>
+<div class="sb-pick-detail">The Dodgers have a commanding 66% win probability in this one according to models. Colorado continues to struggle as one of the weaker teams in the NL, and LA's lineup is stacked top to bottom. Even on the road, the Dodgers' pitching staff should keep the Rockies' bats quiet at Coors.</div>
+<div class="sb-pick-conf"><span class="pct">78%</span><div class="bar"><div class="fill" style="width:78%;background:linear-gradient(90deg,#4fc3f7,#00c853)"></div></div></div>
+</div>
+
+<div class="sb-pick parlay">
+<div class="sb-pick-header"><span class="sb-pick-type parlay-tag">3-Leg Parlay</span><span class="sb-pick-odds">+580</span></div>
+<div class="sb-pick-title">Wednesday Night Special</div>
+<div class="sb-legs">
+<div class="sb-leg">Bulls ML vs Heat (-130)</div>
+<div class="sb-leg">Dodgers ML vs Rockies (-155)</div>
+<div class="sb-leg">Kings -5.5 vs Mavericks (-118)</div>
+</div>
+<div class="sb-pick-detail">This parlay combines three strong favorites with solid edges. The Bulls and Dodgers are our top straight picks, and Sacramento has been dominant at home. The Kings should handle Dallas comfortably with the Mavs fighting for their playoff lives but running low on gas after a grueling stretch.</div>
+<div class="sb-pick-conf"><span class="pct">34%</span><div class="bar"><div class="fill" style="width:34%;background:linear-gradient(90deg,#ffd600,#ff9100)"></div></div></div>
+</div>
+
+<div class="sb-pick parlay">
+<div class="sb-pick-header"><span class="sb-pick-type parlay-tag">2-Leg Parlay</span><span class="sb-pick-odds">+210</span></div>
+<div class="sb-pick-title">Safe Parlay</div>
+<div class="sb-legs">
+<div class="sb-leg">Braves ML vs Blue Jays (-126)</div>
+<div class="sb-leg">Bulls/Heat Over 220 (-110)</div>
+</div>
+<div class="sb-pick-detail">A safer two-leg parlay pairing the Braves with Strider on the bump and the over in the Play-In game. Both teams in Bulls-Heat will be playing with urgency in a win-or-go-home scenario, which historically pushes pace and scoring. Expect a fast-paced, high-energy contest from tip to buzzer.</div>
+<div class="sb-pick-conf"><span class="pct">42%</span><div class="bar"><div class="fill" style="width:42%;background:linear-gradient(90deg,#ffd600,#ff9100)"></div></div></div>
+</div>
+
+</div>
+`;
+dash.insertBefore(section,dash.firstChild);
+})();
+</script>
 </body>
 </html>
