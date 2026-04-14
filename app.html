@@ -75,12 +75,12 @@ td{font-size:14px}
 <li data-tab="live">Live Games</li>
 <li data-tab="lines">Line Comp</li>
 <li data-tab="promos">Promos</li>
-<li data-tab="accounts">Accounts</li>
-<li data-tab="transactions">Transactions</li>
+
+
 <li data-tab="import">Import CSV</li>
 <li data-tab="settings">Settings</li>
 <li data-tab="bets">Bet Tracker</li>
-<li data-tab="mock">Mock Bets</li>         <li data-tab="arb">Arb Calc</li>
+<li data-tab="mock">Mock Bets</li>         
 </ul>
 </aside>
 <div class="main">
@@ -89,8 +89,8 @@ td{font-size:14px}
 <button data-tab="live">Live</button>
 <button data-tab="lines">Lines</button>
 <button data-tab="promos">Promos</button>
-<button data-tab="accounts">Accounts</button>
-<button data-tab="transactions">Trans</button>
+
+
 <button data-tab="settings">Settings</button>
 <button data-tab="bets">Bets</button>
 <button data-tab="mock">Mock</button><button class="mobile-nav" data-tab="arb">Arb</button>
@@ -568,6 +568,26 @@ document.getElementById('lp-wager').oninput=updateLinesPayout2;
 renderLinesSlip2();
 // Re-render if lines already loaded
 if(linesData.length)renderLines();
+</script>
+<script>
+// Clean up nav: remove unwanted tabs, move Settings to last
+(function(){
+var removeTabs=['accounts','transactions','arb'];
+var sidebar=document.querySelector('.nav-links');
+if(sidebar){
+removeTabs.forEach(function(t){var el=sidebar.querySelector('li[data-tab="'+t+'"]');if(el)el.remove();});
+var settingsLi=sidebar.querySelector('li[data-tab="settings"]');
+if(settingsLi){sidebar.appendChild(settingsLi);}
+}
+var mobileNav=document.getElementById('mobile-nav');
+if(mobileNav){
+removeTabs.forEach(function(t){var el=mobileNav.querySelector('button[data-tab="'+t+'"]');if(el)el.remove();});
+var settingsBtn=mobileNav.querySelector('button[data-tab="settings"]');
+if(settingsBtn){mobileNav.appendChild(settingsBtn);}
+}
+// Hide tab content for removed tabs
+['tab-accounts','tab-transactions','tab-arb'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
+})();
 </script>
 </body>
 </html>
