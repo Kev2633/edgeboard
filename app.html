@@ -295,7 +295,7 @@ const mb=document.querySelector('.mobile-nav button[data-tab="'+tab+'"]');if(mb)
 document.querySelectorAll('.nav-links li').forEach(li=>{li.addEventListener('click',()=>switchTab(li.dataset.tab));});
 document.querySelectorAll('.mobile-nav button').forEach(btn=>{btn.addEventListener('click',()=>switchTab(btn.dataset.tab));});
 // ESPN Live Games
-async function fetchESPN(){
+async function fetchESPN(){ try{
 document.getElementById('live-loading').classList.remove('hidden');
 document.getElementById('no-live').classList.add('hidden');
 document.getElementById('live-container').innerHTML='';
@@ -306,6 +306,7 @@ if(!liveData.length)document.getElementById('no-live').classList.remove('hidden'
 renderLive();
 document.getElementById('last-update').textContent='Updated '+new Date().toLocaleTimeString();
 renderDashboard();
+}catch(err){console.error('fetchESPN error:',err);document.getElementById('live-loading').classList.add('hidden');document.getElementById('live-container').innerHTML='<p style="color:red">Error loading games: '+err.message+'</p>';}
 }
 function renderLive(){
     const c=document.getElementById('live-container');c.innerHTML='';const noLive=document.getElementById('no-live');if(noLive){const sf2=document.getElementById('live-sport-filter');const sf2v=sf2?sf2.value:'all';const cnt=sf2v==='all'?liveData.length:liveData.filter(x=>x.sport===sf2v).length;if(liveData.length&&!cnt){noLive.classList.remove('hidden');noLive.textContent='No '+sf2v+' games scheduled today.';}else if(!liveData.length){noLive.classList.remove('hidden');noLive.textContent='No games scheduled yet today. Check back soon!';}else{noLive.classList.add('hidden');}}
